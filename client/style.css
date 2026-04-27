@@ -1,0 +1,307 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Theme tokens ── */
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface-alt: #fafafa;
+  --border: #e5e7eb;
+  --border-input: #ccc;
+  --text: #1a1a1a;
+  --text-muted: #666;
+  --text-subtle: #444;
+  --text-label: #6b7280;
+  --text-setting: #374151;
+  --pill-bg: #f9fafb;
+  --pill-border: #d1d5db;
+  --pill-text: #374151;
+  --pill-hover-bg: #f3f4f6;
+  --pill-hover-border: #9ca3af;
+  --btn-secondary-bg: #e5e7eb;
+  --btn-secondary-text: #1a1a1a;
+  --btn-secondary-hover: #d1d5db;
+}
+
+html[data-theme="dark"] {
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface-alt: #141414;
+  --border: #2e2e2e;
+  --border-input: #3a3a3a;
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --text-subtle: #aaa;
+  --text-label: #9ca3af;
+  --text-setting: #d1d5db;
+  --pill-bg: #252525;
+  --pill-border: #3a3a3a;
+  --pill-text: #d1d5db;
+  --pill-hover-bg: #2e2e2e;
+  --pill-hover-border: #555;
+  --btn-secondary-bg: #2a2a2a;
+  --btn-secondary-text: #f0f0f0;
+  --btn-secondary-hover: #333;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+}
+
+.theme-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .controls-panel {
+    order: -1;
+  }
+}
+
+/* ── Text panels ── */
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.panel label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-subtle);
+}
+
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-input);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.panel textarea {
+  height: 320px;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+textarea[readonly] {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+/* ── Actions ── */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+button {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+button:not(.secondary):not(.pill) {
+  background: #4f46e5;
+  color: #fff;
+}
+
+button:not(.secondary):not(.pill):hover:not(:disabled) {
+  background: #4338ca;
+}
+
+button.secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+}
+
+button.secondary:hover:not(:disabled) {
+  background: var(--btn-secondary-hover);
+}
+
+.status {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  min-height: 1.2em;
+}
+
+.status.error {
+  color: #dc2626;
+}
+
+/* ── Controls panel ── */
+.controls-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.controls-panel h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group > label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-label);
+}
+
+.setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.setting-label {
+  font-size: 0.82rem;
+  color: var(--text-setting);
+  font-weight: 500;
+}
+
+/* ── Preset pills ── */
+.preset-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border: 1px solid var(--pill-border);
+  background: var(--pill-bg);
+  color: var(--pill-text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.pill:hover:not(.active) {
+  background: var(--pill-hover-bg);
+  border-color: var(--pill-hover-border);
+}
+
+.pill.active {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+/* ── Custom text inputs inside controls ── */
+.custom-input {
+  width: 100%;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--pill-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.comments-input {
+  height: 80px;
+  resize: vertical;
+}
