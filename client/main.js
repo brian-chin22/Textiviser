@@ -4,14 +4,34 @@ applyTheme(localStorage.getItem('theme') || 'light');
 
 themeToggle.addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  applyTheme(next);
-  localStorage.setItem('theme', next);
+  themeToggle.classList.add('animating');
+  setTimeout(() => {
+    applyTheme(next);
+    localStorage.setItem('theme', next);
+    themeToggle.classList.remove('animating');
+  }, 150);
 });
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  themeToggle.textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+  const icon = themeToggle.querySelector('.theme-icon');
+  const text = themeToggle.querySelector('.theme-text');
+  if (icon && text) {
+    icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+    text.textContent = theme === 'dark' ? 'Dark' : 'Light';
+  } else {
+    themeToggle.textContent = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+  }
 }
+
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('.header');
+  if (window.scrollY > 10) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
 
 // ── Router ──
 const pages = {
@@ -19,6 +39,14 @@ const pages = {
   '#':             document.getElementById('page-home'),
   '#cover-letter': document.getElementById('page-cover-letter'),
 };
+
+function updateNavIndicator(link) {
+  const indicator = document.getElementById('nav-indicator');
+  if (indicator && link) {
+    indicator.style.width = `${link.offsetWidth}px`;
+    indicator.style.left = `${link.offsetLeft}px`;
+  }
+}
 
 function navigate() {
   const hash = window.location.hash || '#';
@@ -29,11 +57,20 @@ function navigate() {
   if (page) page.classList.add('active');
 
   const link = document.querySelector(`.nav-link[href="${hash === '#' ? '#' : hash}"]`);
-  if (link) link.classList.add('active');
+  if (link) {
+    link.classList.add('active');
+    updateNavIndicator(link);
+  }
 }
 
 window.addEventListener('hashchange', navigate);
-navigate();
+window.addEventListener('resize', () => {
+  const activeLink = document.querySelector('.nav-link.active');
+  updateNavIndicator(activeLink);
+});
+
+// Initial navigation needs a small delay to ensure fonts/layout are ready for the indicator width
+setTimeout(navigate, 0);
 
 // ── Pill groups (shared across all pages) ──
 const pillGroups = {};
@@ -115,9 +152,12 @@ function waitForDrain() {
 
 // ── Shared revision runner ──
 async function runRevision({ prompt, outputEl, reviseBtnEl, copyBtnEl, statusEl }) {
+  const originalBtnText = reviseBtnEl.textContent;
   reviseBtnEl.disabled = true;
+  reviseBtnEl.innerHTML = '<span class="spinner"></span>';
   copyBtnEl.disabled = true;
   outputEl.value = '';
+  outputEl.classList.add('skeleton-loading');
   resetQueue();
   statusEl.textContent = 'Revising...';
   statusEl.className = 'status';
@@ -129,15 +169,19 @@ async function runRevision({ prompt, outputEl, reviseBtnEl, copyBtnEl, statusEl 
       body: JSON.stringify({ prompt }),
     });
 
+    outputEl.classList.remove('skeleton-loading');
+
     if (!res.ok) {
       const data = await res.json();
       statusEl.textContent = data.error || 'Something went wrong.';
-      statusEl.className = 'status error';
+      statusEl.className = 'status error shake';
+      setTimeout(() => statusEl.classList.remove('shake'), 400);
       return;
     }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
+    outputEl.parentElement.classList.add('typewriter-cursor');
 
     while (true) {
       const { done, value } = await reader.read();
@@ -146,16 +190,34 @@ async function runRevision({ prompt, outputEl, reviseBtnEl, copyBtnEl, statusEl 
     }
 
     await waitForDrain();
+    outputEl.parentElement.classList.remove('typewriter-cursor');
 
     copyBtnEl.disabled = false;
     statusEl.textContent = 'Done.';
     statusEl.className = 'status';
   } catch {
+    outputEl.classList.remove('skeleton-loading');
+    outputEl.parentElement.classList.remove('typewriter-cursor');
     statusEl.textContent = 'Network error. Is the server running?';
-    statusEl.className = 'status error';
+    statusEl.className = 'status error shake';
+    setTimeout(() => statusEl.classList.remove('shake'), 400);
   } finally {
     reviseBtnEl.disabled = false;
+    reviseBtnEl.textContent = originalBtnText;
   }
+}
+
+function handleCopySuccess(btn, statusEl) {
+  const originalText = btn.textContent;
+  btn.classList.add('success');
+  btn.textContent = '✓ Copied';
+  statusEl.textContent = 'Copied to clipboard.';
+  statusEl.className = 'status';
+  
+  setTimeout(() => {
+    btn.classList.remove('success');
+    btn.textContent = originalText;
+  }, 2000);
 }
 
 // ── Page: Text Reviser ──
@@ -212,17 +274,19 @@ reviseBtn.addEventListener('click', () => {
   const text = inputText.value.trim();
   if (!text) {
     statusEl.textContent = 'Please enter some text to revise.';
-    statusEl.className = 'status error';
+    statusEl.className = 'status error shake';
+    inputText.classList.add('shake');
+    setTimeout(() => {
+      statusEl.classList.remove('shake');
+      inputText.classList.remove('shake');
+    }, 400);
     return;
   }
   runRevision({ prompt: buildPrompt(text), outputEl: outputText, reviseBtnEl: reviseBtn, copyBtnEl: copyBtn, statusEl });
 });
 
 copyBtn.addEventListener('click', () => {
-  navigator.clipboard.writeText(outputText.value).then(() => {
-    statusEl.textContent = 'Copied to clipboard.';
-    statusEl.className = 'status';
-  });
+  navigator.clipboard.writeText(outputText.value).then(() => handleCopySuccess(copyBtn, statusEl));
 });
 
 // ── Page: Cover Letter ──
@@ -278,15 +342,17 @@ clReviseBtn.addEventListener('click', () => {
   const text = clInputText.value.trim();
   if (!text) {
     clStatusEl.textContent = 'Please enter your cover letter draft.';
-    clStatusEl.className = 'status error';
+    clStatusEl.className = 'status error shake';
+    clInputText.classList.add('shake');
+    setTimeout(() => {
+      clStatusEl.classList.remove('shake');
+      clInputText.classList.remove('shake');
+    }, 400);
     return;
   }
   runRevision({ prompt: buildCoverLetterPrompt(text), outputEl: clOutputText, reviseBtnEl: clReviseBtn, copyBtnEl: clCopyBtn, statusEl: clStatusEl });
 });
 
 clCopyBtn.addEventListener('click', () => {
-  navigator.clipboard.writeText(clOutputText.value).then(() => {
-    clStatusEl.textContent = 'Copied to clipboard.';
-    clStatusEl.className = 'status';
-  });
+  navigator.clipboard.writeText(clOutputText.value).then(() => handleCopySuccess(clCopyBtn, clStatusEl));
 });
