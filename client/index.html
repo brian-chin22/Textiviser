@@ -24,6 +24,7 @@
       <nav class="app-nav">
         <a href="#" class="nav-link active">Text Reviser</a>
         <a href="#cover-letter" class="nav-link">Cover Letter</a>
+        <a href="#email" class="nav-link">Email</a>
         <div class="nav-indicator" id="nav-indicator"></div>
       </nav>
 
@@ -159,6 +160,7 @@
                 <button class="pill" data-value="Confident">Confident</button>
                 <button class="pill" data-value="Conversational">Conversational</button>
               </div>
+              <input type="text" class="custom-input" id="cl-tone-custom" placeholder="Custom tone..." />
             </div>
 
             <div class="control-group">
@@ -189,6 +191,104 @@
             <div class="control-group">
               <label for="cl-comments">Additional Notes</label>
               <textarea id="cl-comments" class="comments-input" placeholder="e.g. mention a specific project, mirror the company's language..."></textarea>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      <!-- ── Page: Email ── -->
+      <div id="page-email" class="page">
+        <div class="layout">
+          <div class="main-col">
+            <div class="panels">
+              <div class="panel">
+                <label for="em-input-text">Your Draft</label>
+                <textarea id="em-input-text" placeholder="Paste your email draft here..."></textarea>
+              </div>
+              <div class="panel">
+                <label for="em-output-text">Revised</label>
+                <textarea id="em-output-text" placeholder="Revised email will appear here..." readonly></textarea>
+              </div>
+            </div>
+            <div class="actions">
+              <button id="em-revise-btn">Revise Email</button>
+              <button id="em-copy-btn" class="secondary" disabled>Copy</button>
+            </div>
+            <p id="em-status" class="status"></p>
+          </div>
+
+          <aside class="controls-panel">
+            <h2>Email Controls</h2>
+
+            <div class="control-group">
+              <label for="em-recipient">Recipient</label>
+              <input type="text" id="em-recipient" class="custom-input" placeholder="e.g. Hiring Manager, Team, Client" />
+            </div>
+
+            <div class="control-group">
+              <label for="em-subject">Subject / Goal</label>
+              <input type="text" id="em-subject" class="custom-input" placeholder="e.g. Follow up on proposal, Request a meeting" />
+            </div>
+
+            <div class="control-group">
+              <label>Type</label>
+              <div class="preset-pills" data-group="em-type">
+                <button class="pill active" data-value="">General</button>
+                <button class="pill" data-value="Follow-up">Follow-up</button>
+                <button class="pill" data-value="Request">Request</button>
+                <button class="pill" data-value="Apology">Apology</button>
+                <button class="pill" data-value="Thank You">Thank You</button>
+                <button class="pill" data-value="Introduction">Introduction</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Tone</label>
+              <div class="preset-pills" data-group="em-tone">
+                <button class="pill active" data-value="Professional">Professional</button>
+                <button class="pill" data-value="Friendly">Friendly</button>
+                <button class="pill" data-value="Formal">Formal</button>
+                <button class="pill" data-value="Assertive">Assertive</button>
+                <button class="pill" data-value="Empathetic">Empathetic</button>
+              </div>
+              <input type="text" class="custom-input" id="em-tone-custom" placeholder="Custom tone..." />
+            </div>
+
+            <div class="control-group">
+              <label>Audience</label>
+              <div class="preset-pills" data-group="em-audience">
+                <button class="pill active" data-value="">Default</button>
+                <button class="pill" data-value="Colleague">Colleague</button>
+                <button class="pill" data-value="Manager">Manager</button>
+                <button class="pill" data-value="Client">Client</button>
+                <button class="pill" data-value="Recruiter">Recruiter</button>
+                <button class="pill" data-value="Executive">Executive</button>
+              </div>
+              <input type="text" class="custom-input" id="em-audience-custom" placeholder="Custom audience..." />
+            </div>
+
+            <div class="control-group">
+              <label>Length</label>
+              <div class="preset-pills" data-group="em-length">
+                <button class="pill" data-value="very concise (under 80 words)">Brief</button>
+                <button class="pill active" data-value="concise (under 150 words)">Standard</button>
+                <button class="pill" data-value="detailed (200+ words)">Detailed</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Urgency</label>
+              <div class="preset-pills" data-group="em-urgency">
+                <button class="pill active" data-value="">None</button>
+                <button class="pill" data-value="Low">Low</button>
+                <button class="pill" data-value="Medium">Medium</button>
+                <button class="pill" data-value="High">High</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="em-comments">Additional Instructions</label>
+              <textarea id="em-comments" class="comments-input" placeholder="e.g. include a call to action, avoid being pushy, mention the deadline..."></textarea>
             </div>
           </aside>
         </div>

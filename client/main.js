@@ -38,6 +38,7 @@ const pages = {
   '':              document.getElementById('page-home'),
   '#':             document.getElementById('page-home'),
   '#cover-letter': document.getElementById('page-cover-letter'),
+  '#email':        document.getElementById('page-email'),
 };
 
 function updateNavIndicator(link) {
@@ -293,7 +294,7 @@ copyBtn.addEventListener('click', () => {
 function buildCoverLetterPrompt(text) {
   const position = document.getElementById('cl-position').value.trim();
   const company  = document.getElementById('cl-company').value.trim();
-  const tone     = pillGroups['cl-tone'] || 'Professional';
+  const tone     = getControlValue('cl-tone') || 'Professional';
   const emphasis = pillGroups['cl-emphasis'];
   const length   = pillGroups['cl-length'] || 'standard (~350 words)';
   const skills   = document.getElementById('cl-skills').value.trim();
@@ -355,4 +356,75 @@ clReviseBtn.addEventListener('click', () => {
 
 clCopyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(clOutputText.value).then(() => handleCopySuccess(clCopyBtn, clStatusEl));
+});
+
+// ── Page: Email ──
+function buildEmailPrompt(text) {
+  const recipient = document.getElementById('em-recipient').value.trim();
+  const subject   = document.getElementById('em-subject').value.trim();
+  const type      = pillGroups['em-type'];
+  const tone      = getControlValue('em-tone') || 'Professional';
+  const audience  = getControlValue('em-audience');
+  const length    = pillGroups['em-length'] || 'concise (under 150 words)';
+  const urgency   = pillGroups['em-urgency'];
+  const comments  = document.getElementById('em-comments').value.trim();
+
+  const req = (label, value) => value ? `- ${label}: ${value}` : null;
+
+  const requirements = [
+    req('Recipient', recipient),
+    req('Subject / Goal', subject),
+    req('Email Type', type),
+    `- Tone: ${tone}`,
+    req('Audience', audience),
+    `- Length: ${length}`,
+    req('Urgency', urgency),
+    req('Additional Instructions', comments),
+  ].filter(Boolean).join('\n');
+
+  return `You are an expert business writer specializing in professional email communication.
+
+Original Email / Draft:
+${text}
+
+Revision Requirements:
+${requirements}
+
+Instructions:
+- Write a clear, purposeful subject line only if one is not already present.
+- Open with context immediately — no filler phrases like "I hope this email finds you well."
+- State the purpose of the email in the first sentence.
+- Keep sentences short and paragraphs to 2–3 lines maximum.
+- End with a clear, specific call to action or next step.
+- Match the tone and formality to the recipient and context.
+- Preserve any specific facts, names, dates, or figures from the original.
+- Do not add unnecessary pleasantries or padding.
+- Do not include explanations—output only the revised email.
+
+Revised Email:`;
+}
+
+const emReviseBtn  = document.getElementById('em-revise-btn');
+const emCopyBtn    = document.getElementById('em-copy-btn');
+const emInputText  = document.getElementById('em-input-text');
+const emOutputText = document.getElementById('em-output-text');
+const emStatusEl   = document.getElementById('em-status');
+
+emReviseBtn.addEventListener('click', () => {
+  const text = emInputText.value.trim();
+  if (!text) {
+    emStatusEl.textContent = 'Please enter your email draft.';
+    emStatusEl.className = 'status error shake';
+    emInputText.classList.add('shake');
+    setTimeout(() => {
+      emStatusEl.classList.remove('shake');
+      emInputText.classList.remove('shake');
+    }, 400);
+    return;
+  }
+  runRevision({ prompt: buildEmailPrompt(text), outputEl: emOutputText, reviseBtnEl: emReviseBtn, copyBtnEl: emCopyBtn, statusEl: emStatusEl });
+});
+
+emCopyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(emOutputText.value).then(() => handleCopySuccess(emCopyBtn, emStatusEl));
 });
