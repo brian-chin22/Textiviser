@@ -8,6 +8,8 @@
   </head>
   <body>
     <div class="container">
+
+      <!-- Header -->
       <div class="header">
         <div>
           <h1>Textiviser</h1>
@@ -16,101 +18,179 @@
         <button id="theme-toggle" class="secondary theme-btn" aria-label="Toggle theme">☀️ Light</button>
       </div>
 
-      <div class="layout">
-        <!-- Left: text panels -->
-        <div class="main-col">
-          <div class="panels">
-            <div class="panel">
-              <label for="input-text">Original</label>
-              <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+      <!-- Nav tabs -->
+      <nav class="app-nav">
+        <a href="#" class="nav-link active">Text Reviser</a>
+        <a href="#cover-letter" class="nav-link">Cover Letter</a>
+      </nav>
+
+      <!-- ── Page: Text Reviser ── -->
+      <div id="page-home" class="page active">
+        <div class="layout">
+          <div class="main-col">
+            <div class="panels">
+              <div class="panel">
+                <label for="input-text">Original</label>
+                <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+              </div>
+              <div class="panel">
+                <label for="output-text">Revised</label>
+                <textarea id="output-text" placeholder="Revised text will appear here..." readonly></textarea>
+              </div>
             </div>
-            <div class="panel">
-              <label for="output-text">Revised</label>
-              <textarea id="output-text" placeholder="Revised text will appear here..." readonly></textarea>
+            <div class="actions">
+              <button id="revise-btn">Revise</button>
+              <button id="copy-btn" class="secondary" disabled>Copy</button>
             </div>
+            <p id="status" class="status"></p>
           </div>
 
-          <div class="actions">
-            <button id="revise-btn">Revise</button>
-            <button id="copy-btn" class="secondary" disabled>Copy</button>
-          </div>
+          <aside class="controls-panel">
+            <h2>Revision Controls</h2>
 
-          <p id="status" class="status"></p>
+            <div class="control-group">
+              <label>Tone</label>
+              <div class="preset-pills" data-group="tone">
+                <button class="pill active" data-value="">Default</button>
+                <button class="pill" data-value="Professional">Professional</button>
+                <button class="pill" data-value="Casual">Casual</button>
+                <button class="pill" data-value="Friendly">Friendly</button>
+                <button class="pill" data-value="Formal">Formal</button>
+                <button class="pill" data-value="Persuasive">Persuasive</button>
+              </div>
+              <input type="text" class="custom-input" id="tone-custom" placeholder="Custom tone..." />
+            </div>
+
+            <div class="control-group">
+              <label>Audience</label>
+              <div class="preset-pills" data-group="audience">
+                <button class="pill active" data-value="">Default</button>
+                <button class="pill" data-value="General">General</button>
+                <button class="pill" data-value="Academic">Academic</button>
+                <button class="pill" data-value="Technical">Technical</button>
+                <button class="pill" data-value="Business">Business</button>
+                <button class="pill" data-value="Children">Children</button>
+              </div>
+              <input type="text" class="custom-input" id="audience-custom" placeholder="Custom audience..." />
+            </div>
+
+            <div class="control-group">
+              <label>Settings</label>
+              <div class="setting-row">
+                <span class="setting-label">Length</span>
+                <div class="preset-pills" data-group="length">
+                  <button class="pill active" data-value="">Same</button>
+                  <button class="pill" data-value="Shorter">Shorter</button>
+                  <button class="pill" data-value="Longer">Longer</button>
+                </div>
+              </div>
+              <div class="setting-row">
+                <span class="setting-label">Reading Level</span>
+                <div class="preset-pills" data-group="reading-level">
+                  <button class="pill active" data-value="">Standard</button>
+                  <button class="pill" data-value="Simplified">Simplified</button>
+                  <button class="pill" data-value="Advanced">Advanced</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Style</label>
+              <div class="preset-pills" data-group="style">
+                <button class="pill active" data-value="">Default</button>
+                <button class="pill" data-value="Concise">Concise</button>
+                <button class="pill" data-value="Detailed">Detailed</button>
+                <button class="pill" data-value="Narrative">Narrative</button>
+                <button class="pill" data-value="Bullet Points">Bullet Points</button>
+              </div>
+              <input type="text" class="custom-input" id="style-custom" placeholder="Custom style..." />
+            </div>
+
+            <div class="control-group">
+              <label for="comments">Additional Comments</label>
+              <textarea id="comments" class="comments-input" placeholder="Any extra instructions for the AI..."></textarea>
+            </div>
+          </aside>
         </div>
-
-        <!-- Right: controls panel -->
-        <aside class="controls-panel">
-          <h2>Revision Controls</h2>
-
-          <!-- Tone -->
-          <div class="control-group">
-            <label>Tone</label>
-            <div class="preset-pills" data-group="tone">
-              <button class="pill active" data-value="">Default</button>
-              <button class="pill" data-value="Professional">Professional</button>
-              <button class="pill" data-value="Casual">Casual</button>
-              <button class="pill" data-value="Friendly">Friendly</button>
-              <button class="pill" data-value="Formal">Formal</button>
-              <button class="pill" data-value="Persuasive">Persuasive</button>
-            </div>
-            <input type="text" class="custom-input" id="tone-custom" placeholder="Custom tone..." />
-          </div>
-
-          <!-- Audience -->
-          <div class="control-group">
-            <label>Audience</label>
-            <div class="preset-pills" data-group="audience">
-              <button class="pill active" data-value="">Default</button>
-              <button class="pill" data-value="General">General</button>
-              <button class="pill" data-value="Academic">Academic</button>
-              <button class="pill" data-value="Technical">Technical</button>
-              <button class="pill" data-value="Business">Business</button>
-              <button class="pill" data-value="Children">Children</button>
-            </div>
-            <input type="text" class="custom-input" id="audience-custom" placeholder="Custom audience..." />
-          </div>
-
-          <!-- Settings -->
-          <div class="control-group">
-            <label>Settings</label>
-            <div class="setting-row">
-              <span class="setting-label">Length</span>
-              <div class="preset-pills" data-group="length">
-                <button class="pill active" data-value="">Same</button>
-                <button class="pill" data-value="Shorter">Shorter</button>
-                <button class="pill" data-value="Longer">Longer</button>
-              </div>
-            </div>
-            <div class="setting-row">
-              <span class="setting-label">Reading Level</span>
-              <div class="preset-pills" data-group="reading-level">
-                <button class="pill active" data-value="">Standard</button>
-                <button class="pill" data-value="Simplified">Simplified</button>
-                <button class="pill" data-value="Advanced">Advanced</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Style -->
-          <div class="control-group">
-            <label>Style</label>
-            <div class="preset-pills" data-group="style">
-              <button class="pill active" data-value="">Default</button>
-              <button class="pill" data-value="Concise">Concise</button>
-              <button class="pill" data-value="Detailed">Detailed</button>
-              <button class="pill" data-value="Narrative">Narrative</button>
-              <button class="pill" data-value="Bullet Points">Bullet Points</button>
-            </div>
-            <input type="text" class="custom-input" id="style-custom" placeholder="Custom style..." />
-          </div>
-
-          <!-- Additional Comments -->
-          <div class="control-group">
-            <label for="comments">Additional Comments</label>
-            <textarea id="comments" class="comments-input" placeholder="Any extra instructions for the AI..."></textarea>
-          </div>
-        </aside>
       </div>
+
+      <!-- ── Page: Cover Letter ── -->
+      <div id="page-cover-letter" class="page">
+        <div class="layout">
+          <div class="main-col">
+            <div class="panels">
+              <div class="panel">
+                <label for="cl-input-text">Your Draft</label>
+                <textarea id="cl-input-text" placeholder="Paste your cover letter draft here..."></textarea>
+              </div>
+              <div class="panel">
+                <label for="cl-output-text">Revised</label>
+                <textarea id="cl-output-text" placeholder="Revised cover letter will appear here..." readonly></textarea>
+              </div>
+            </div>
+            <div class="actions">
+              <button id="cl-revise-btn">Revise Cover Letter</button>
+              <button id="cl-copy-btn" class="secondary" disabled>Copy</button>
+            </div>
+            <p id="cl-status" class="status"></p>
+          </div>
+
+          <aside class="controls-panel">
+            <h2>Cover Letter Controls</h2>
+
+            <div class="control-group">
+              <label for="cl-position">Position</label>
+              <input type="text" id="cl-position" class="custom-input" placeholder="e.g. Senior Product Designer" />
+            </div>
+
+            <div class="control-group">
+              <label for="cl-company">Company</label>
+              <input type="text" id="cl-company" class="custom-input" placeholder="e.g. Stripe" />
+            </div>
+
+            <div class="control-group">
+              <label>Tone</label>
+              <div class="preset-pills" data-group="cl-tone">
+                <button class="pill active" data-value="Professional">Professional</button>
+                <button class="pill" data-value="Enthusiastic">Enthusiastic</button>
+                <button class="pill" data-value="Confident">Confident</button>
+                <button class="pill" data-value="Conversational">Conversational</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Emphasize</label>
+              <div class="preset-pills" data-group="cl-emphasis">
+                <button class="pill active" data-value="">Balanced</button>
+                <button class="pill" data-value="Achievements">Achievements</button>
+                <button class="pill" data-value="Skills">Skills</button>
+                <button class="pill" data-value="Leadership">Leadership</button>
+                <button class="pill" data-value="Culture Fit">Culture Fit</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Length</label>
+              <div class="preset-pills" data-group="cl-length">
+                <button class="pill" data-value="concise (under 250 words)">Concise</button>
+                <button class="pill active" data-value="standard (~350 words)">Standard</button>
+                <button class="pill" data-value="detailed (450+ words)">Detailed</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="cl-skills">Key Skills to Highlight</label>
+              <input type="text" id="cl-skills" class="custom-input" placeholder="e.g. React, team leadership, data analysis" />
+            </div>
+
+            <div class="control-group">
+              <label for="cl-comments">Additional Notes</label>
+              <textarea id="cl-comments" class="comments-input" placeholder="e.g. mention a specific project, mirror the company's language..."></textarea>
+            </div>
+          </aside>
+        </div>
+      </div>
+
     </div>
     <script src="main.js"></script>
   </body>

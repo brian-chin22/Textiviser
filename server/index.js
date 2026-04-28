@@ -22,13 +22,25 @@ app.post('/api/revise', async (req, res) => {
 
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
-    const result = await model.generateContent(prompt);
 
-    const revised = result.response.text();
-    res.json({ revised });
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Transfer-Encoding', 'chunked');
+
+    const result = await model.generateContentStream(prompt);
+
+    for await (const chunk of result.stream) {
+      const text = chunk.text();
+      if (text) res.write(text);
+    }
+
+    res.end();
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to revise text.' });
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to revise text.' });
+    } else {
+      res.end();
+    }
   }
 });
 
